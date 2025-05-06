@@ -5,7 +5,7 @@
 ![graphs](doc/graphs.png)
 
 Lightweight curve fitting for linear, exponential, logarithmic, and power regressions. Designed for minimal RAM usage and efficient use on microcontrollers (Arduino).
-Sample applications is comparing a calibrated sensor with an uncalibrated sensor.
+Sample application is comparing a calibrated sensor with an uncalibrated sensor.
 The library provides four classes:
 
 | class  | equation             | description               |

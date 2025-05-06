@@ -199,12 +199,12 @@ public:
 
   /*! @brief: add a sample */
   void add(float x, float y) {
-    linFit::add(logf(x), log(y));
+    linFit::add(logf(x), logf(y));
   }
 
   /*! @brief: remove previously added sample */
   void remove(float x, float y) {
-    linFit::remove(logf(x), log(y));
+    linFit::remove(logf(x), logf(y));
   }
 
   /*! @brief: scaling factor */
