@@ -5,7 +5,6 @@
 ![graphs](doc/graphs.png)
 
 Lightweight curve fitting for linear, exponential, logarithmic, and power regressions. Designed for minimal RAM usage and efficient use on microcontrollers (Arduino).
-Sample application is comparing a calibrated sensor with an uncalibrated sensor.
 The library provides four classes:
 
 | class  | equation             | description               |
@@ -35,9 +34,14 @@ Each class offers the following methods:
 | y(x)        | Computes y for a given x.                                                                                                                                            |
 | x(y)        | Computes x for a given y.                                                                                                                                            |
 
-## Remarks
+## Examples
 
-The four curve fitting methods are related: 
+- [led](examples/led/README.md) modeling the diminishing brightness of a LED lamp.
+- [light sensor](https://github.com/koendv/xyc-als21c-k1/tree/main/examples/als21c_compare) validating a new light sensor by correlating with a known good sensor.
+
+## Notes
+
+The four curve fitting methods are related:
 
 | class  | x       | y       | note       |
 | ------ | ------- | ------- | ---------- |
@@ -50,4 +54,4 @@ As an example, exponential curve fitting of $(x,y)$ is implemented as linear reg
 
 Negative and zero values of x will cause NaN (not a number) errors in logarithmic and power curve fits. Negative and zero values of y will cause NaN errors in exponential and power curve fits.
 
-Each class requires only 24 bytes of RAM. Calculations are single precision floating point. 
+Each regression requires only 24 bytes of RAM. Calculations are single precision floating point.
