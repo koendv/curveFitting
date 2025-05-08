@@ -55,3 +55,5 @@ As an example, exponential curve fitting of $(x,y)$ is implemented as linear reg
 Negative and zero values of x will cause NaN (not a number) errors in logarithmic and power curve fits. Negative and zero values of y will cause NaN errors in exponential and power curve fits.
 
 Each regression requires only 24 bytes of RAM. Calculations are single precision floating point.
+
+For desktop use, a version of the library using templates allows choosing between `float` , `double` and `long double`. 
