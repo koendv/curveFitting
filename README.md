@@ -50,10 +50,10 @@ The four curve fitting methods are related:
 | logFit | $ln(x)$ | $y$     | $x>0$      |
 | powFit | $ln(x)$ | $ln(y)$ | $x>0, y>0$ |
 
-As an example, exponential curve fitting of $(x,y)$ is implemented as linear regression of $(x, ln(y))$. This requires $y>0$. The mean of $y$ then becomes the *geometric mean* of $y$, and the standard deviation of $y$ then becomes the *geometric standard deviation* of $y$.
+As an example, take exponential curve fitting. Exponential curve fitting of $(x,y)$ is implemented as linear regression of $(x, ln(y))$. This requires $y>0$. Substituting $y$ with the logarithm of $y$, the mean of $y$ becomes the *geometric mean* of $y$, and the standard deviation of $y$ becomes the *geometric standard deviation* of $y$.
 
 Negative and zero values of x will cause NaN (not a number) errors in logarithmic and power curve fits. Negative and zero values of y will cause NaN errors in exponential and power curve fits.
 
 Each regression requires only 24 bytes of RAM. Calculations are single precision floating point.
 
-For desktop use, a version of the library using templates allows choosing between `float` , `double` and `long double`. 
+There is also a version of the library using templates that allows choosing between `float` , `double` and `long double` precision. This is mainly for desktop usage, as for many microcontrollers double precision floating point is prohibitively slow.

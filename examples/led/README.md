@@ -33,4 +33,4 @@ correlation = -0.9663
 
 The time constant of the exponential decay is 62500 hours, about 7 years.
 The correlation is negative, as LED brightness decreases with time.
-The LED is at 70% brightness after 24000 hours, or 2 years and 8 months.
+The LED is at 70% brightness after 24000 hours, or 1000 days.
