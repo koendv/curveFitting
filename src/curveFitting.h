@@ -8,7 +8,7 @@
 #ifndef _CURVE_FITTING_H_
 #define _CURVE_FITTING_H_
 
-#include <math.h>
+#include <cmath>
 
 /**
  * @class linFit
@@ -16,6 +16,7 @@
  * @details Computes slope, intercept, correlation, mean, and standard deviation.
  */
 
+template<typename Scalar = float>
 class linFit {
 public:
   linFit() {
@@ -33,7 +34,7 @@ public:
   }
 
   /*! @brief add a sample */
-  void add(float x, float y) {
+  void add(Scalar x, Scalar y) {
     _sum_x += x;
     _sum_x2 += x * x;
     _sum_y += y;
@@ -43,7 +44,7 @@ public:
   }
 
   /*! @brief remove previously added sample */
-  void remove(float x, float y) {
+  void remove(Scalar x, Scalar y) {
     _sum_x -= x;
     _sum_x2 -= x * x;
     _sum_y -= y;
@@ -58,37 +59,37 @@ public:
   }
 
   /*! @brief slope */
-  float a() {
+  Scalar a() {
     return (_n * _sum_xy - _sum_x * _sum_y) / (_n * _sum_x2 - _sum_x * _sum_x);
   }
 
   /*! @brief intercept */
-  float b() {
+  Scalar b() {
     return (_sum_y * _sum_x2 - _sum_x * _sum_xy) / (_n * _sum_x2 - _sum_x * _sum_x);
   }
 
   /*! @brief correlation*/
-  float r() {
-    return (_n * _sum_xy - _sum_x * _sum_y) / sqrtf((_n * _sum_x2 - _sum_x * _sum_x) * (_n * _sum_y2 - _sum_y * _sum_y));
+  Scalar r() {
+    return (_n * _sum_xy - _sum_x * _sum_y) / std::sqrt((_n * _sum_x2 - _sum_x * _sum_x) * (_n * _sum_y2 - _sum_y * _sum_y));
   }
 
   /*! @brief standard deviation of x */
-  float std_x() {
-    return sqrtf((_sum_x2 - _sum_x * _sum_x / _n) / (_n - 1));
+  Scalar sd_x() {
+    return std::sqrt((_sum_x2 - _sum_x * _sum_x / _n) / (_n - 1));
   }
 
   /*! @brief standard deviation of y */
-  float std_y() {
-    return sqrtf((_sum_y2 - _sum_y * _sum_y / _n) / (_n - 1));
+  Scalar sd_y() {
+    return std::sqrt((_sum_y2 - _sum_y * _sum_y / _n) / (_n - 1));
   }
 
   /*! @brief mean of x */
-  float mean_x() {
+  Scalar mean_x() {
     return _sum_x / _n;
   }
 
   /*! @brief mean of y */
-  float mean_y() {
+  Scalar mean_y() {
     return _sum_y / _n;
   }
 
@@ -97,7 +98,7 @@ public:
    * @param x x-coordinate.
    * @return predicted y-coordinate.
    */
-  float y(float x) {
+  Scalar y(Scalar x) {
     return a() * x + b();
   }
 
@@ -106,12 +107,12 @@ public:
    * @param y y-coordinate.
    * @return predicted x-coordinate.
    */
-  float x(float y) {
+  Scalar x(Scalar y) {
     return (y - b()) / a();
   }
 
 private:
-  float _sum_x, _sum_x2, _sum_y, _sum_y2, _sum_xy;
+  Scalar _sum_x, _sum_x2, _sum_y, _sum_y2, _sum_xy;
   int _n;
 };
 
@@ -120,32 +121,33 @@ private:
  * @brief Fits data to an exponential curve y = b * exp(a * x)
  */
 
-class expFit : public linFit {
+template<typename Scalar = float>
+class expFit : public linFit<Scalar> {
 public:
 
   /*! @brief add a sample */
-  void add(float x, float y) {
-    linFit::add(x, logf(y));
+  void add(Scalar x, Scalar y) {
+    linFit<Scalar>::add(x, std::log(y));
   }
 
   /*! @brief remove previously added sample */
-  void remove(float x, float y) {
-    linFit::remove(x, logf(y));
+  void remove(Scalar x, Scalar y) {
+    linFit<Scalar>::remove(x, std::log(y));
   }
 
   /*! @brief initial value */
-  float b() {
-    return expf(linFit::b());
+  Scalar b() {
+    return std::exp(linFit<Scalar>::b());
   }
 
   /*! @brief returns the geometric standard deviation of y */
-  float std_y() {
-    return expf(linFit::std_y());
+  Scalar sd_y() {
+    return std::exp(linFit<Scalar>::sd_y());
   }
 
   /*! @brief returns the geometric mean of y */
-  float mean_y() {
-    return expf(linFit::mean_y());
+  Scalar mean_y() {
+    return std::exp(linFit<Scalar>::mean_y());
   }
 
   /**
@@ -153,8 +155,8 @@ public:
    * @param x x-coordinate.
    * @return predicted y-coordinate.
    */
-  float y(float x) {
-    return expf(linFit::y(x));
+  Scalar y(Scalar x) {
+    return std::exp(linFit<Scalar>::y(x));
   }
 
   /**
@@ -162,8 +164,8 @@ public:
    * @param y y-coordinate.
    * @return predicted x-coordinate.
    */
-  float x(float y) {
-    return linFit::x(logf(y));
+  Scalar x(Scalar y) {
+    return linFit<Scalar>::x(std::log(y));
   }
 };
 
@@ -172,27 +174,28 @@ public:
  * @brief Fits data to a logarithmic curve y = a * log(x) + b
  */
 
-class logFit : public linFit {
+template<typename Scalar = float>
+class logFit : public linFit<Scalar> {
 public:
 
   /*! @brief add a sample */
-  void add(float x, float y) {
-    linFit::add(logf(x), y);
+  void add(Scalar x, Scalar y) {
+    linFit<Scalar>::add(std::log(x), y);
   }
 
   /*! @brief remove previously added sample */
-  void remove(float x, float y) {
-    linFit::remove(logf(x), y);
+  void remove(Scalar x, Scalar y) {
+    linFit<Scalar>::remove(std::log(x), y);
   }
 
   /*! @brief returns the geometric standard deviation of x */
-  float std_x() {
-    return expf(linFit::std_x());
+  Scalar sd_x() {
+    return std::exp(linFit<Scalar>::sd_x());
   }
 
   /*! @brief returns the geometric mean of x */
-  float mean_x() {
-    return expf(linFit::mean_x());
+  Scalar mean_x() {
+    return std::exp(linFit<Scalar>::mean_x());
   }
 
   /**
@@ -200,8 +203,8 @@ public:
    * @param x x-coordinate.
    * @return predicted y-coordinate.
    */
-  float y(float x) {
-    return linFit::y(logf(x));
+  Scalar y(Scalar x) {
+    return linFit<Scalar>::y(std::log(x));
   }
 
   /**
@@ -209,8 +212,8 @@ public:
    * @param y y-coordinate.
    * @return predicted x-coordinate.
    */
-  float x(float y) {
-    return expf(linFit::x(y));
+  Scalar x(Scalar y) {
+    return std::exp(linFit<Scalar>::x(y));
   }
 };
 
@@ -219,42 +222,43 @@ public:
  * @brief Fits data to a power curve y = b * pow(x, a)
  */
 
-class powFit : public linFit {
+template<typename Scalar = float>
+class powFit : public linFit<Scalar> {
 public:
 
   /*! @brief add a sample */
-  void add(float x, float y) {
-    linFit::add(logf(x), logf(y));
+  void add(Scalar x, Scalar y) {
+    linFit<Scalar>::add(std::log(x), std::log(y));
   }
 
   /*! @brief remove previously added sample */
-  void remove(float x, float y) {
-    linFit::remove(logf(x), logf(y));
+  void remove(Scalar x, Scalar y) {
+    linFit<Scalar>::remove(std::log(x), std::log(y));
   }
 
   /*! @brief scaling factor */
-  float b() {
-    return expf(linFit::b());
+  Scalar b() {
+    return std::exp(linFit<Scalar>::b());
   }
 
   /*! @brief returns the geometric standard deviation of x */
-  float std_x() {
-    return expf(linFit::std_x());
+  Scalar sd_x() {
+    return std::exp(linFit<Scalar>::sd_x());
   }
 
   /*! @brief returns the geometric standard deviation of y */
-  float std_y() {
-    return expf(linFit::std_y());
+  Scalar sd_y() {
+    return std::exp(linFit<Scalar>::sd_y());
   }
 
   /*! @brief returns the geometric mean of x */
-  float mean_x() {
-    return expf(linFit::mean_x());
+  Scalar mean_x() {
+    return std::exp(linFit<Scalar>::mean_x());
   }
 
   /*! @brief returns the geometric mean of y */
-  float mean_y() {
-    return expf(linFit::mean_y());
+  Scalar mean_y() {
+    return std::exp(linFit<Scalar>::mean_y());
   }
 
   /**
@@ -262,8 +266,8 @@ public:
    * @param x x-coordinate.
    * @return predicted y-coordinate.
    */
-  float y(float x) {
-    return expf(linFit::y(logf(x)));
+  Scalar y(Scalar x) {
+    return std::exp(linFit<Scalar>::y(std::log(x)));
   }
 
   /**
@@ -271,8 +275,8 @@ public:
    * @param y y-coordinate.
    * @return predicted x-coordinate.
    */
-  float x(float y) {
-    return expf(linFit::x(logf(y)));
+  Scalar x(Scalar y) {
+    return std::exp(linFit<Scalar>::x(std::log(y)));
   }
 };
 #endif
