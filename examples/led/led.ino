@@ -9,6 +9,7 @@ expFit exp_fit;
 void setup() {
   while (!Serial)
     ;
+  Serial.begin(115200);
 
   /* simulates getting brightness data from sensor */
 
